@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Black Pass — Password Guesser</title>
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark">bp</span>
+        <span class="brand-name">Black&nbsp;Pass</span>
+      </a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#commands">Commands</a>
+        <a href="#performance">Performance</a>
+        <a class="nav-cta" href="#download">Download</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <span class="eyebrow">Open-source learning tool · Python 3</span>
+      <h1>Understand password strength from the inside out.</h1>
+      <p class="sub">Black Pass is a command-line password guesser. Type in a password and watch
+      how a dictionary attack and a brute-force search try to find it — a hands-on way to learn
+      why length and unpredictability matter.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#download">Download the files</a>
+        <a class="btn btn-secondary" href="#commands">View the commands</a>
+      </div>
+      <p class="hero-note">Runs entirely on your own machine · No installation beyond Python 3</p>
+    </div>
+
+    <div class="code-preview" aria-hidden="true">
+      <div class="cp-bar"><i></i><i></i><i></i><span>Terminal</span></div>
+      <pre><span class="cp-prompt">$</span> black_pass-dict
+Enter password: <span class="cp-user">letmein</span>
+<span class="cp-muted">Scanning wordlist — 184,388 entries…</span>
+<span class="cp-ok">Password found: letmein</span>
+<span class="cp-muted">Took about 8 guesses · 0.03s</span>
+
+<span class="cp-prompt">$</span> <span class="cp-cursor"> </span></pre>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="how">
+      <div class="section-head">
+        <span class="label">How it works</span>
+        <h2>Two strategies, one lesson</h2>
+      </div>
+      <div class="cards-2">
+        <article class="card">
+          <div class="card-num">01</div>
+          <h3>Dictionary attack</h3>
+          <p>It first tests the 184,388 most common real-world passwords from the
+          <code>phpbb.txt</code> breach list. Weak or reused passwords are found almost instantly.</p>
+        </article>
+        <article class="card">
+          <div class="card-num">02</div>
+          <h3>Brute force</h3>
+          <p>If the wordlist misses, it generates every possible character combination from length
+          one through ten — distributed across all of your CPU cores at once.</p>
+        </article>
+      </div>
+      <p class="callout">Black Pass only ever guesses the password you enter yourself. It is an
+      educational tool, not an attack tool.</p>
+    </section>
+
+    <section class="section alt" id="commands">
+      <div class="section-head">
+        <span class="label">Commands</span>
+        <h2>Eight ways to run it</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Command</th><th>Behavior</th><th>Mode</th></tr></thead>
+          <tbody>
+            <tr><td><code>black_pass</code></td><td>Brute force, quiet output</td><td><span class="chip chip-fast">All cores</span></td></tr>
+            <tr><td><code>black_pass-print</code></td><td>Brute force, prints every guess</td><td><span class="chip chip-fast">All cores</span></td></tr>
+            <tr><td><code>black_pass-dict</code></td><td>Wordlist first, then brute force</td><td><span class="chip chip-fast">All cores</span></td></tr>
+            <tr><td><code>black_pass-dict-print</code></td><td>Wordlist + brute force, printing</td><td><span class="chip chip-fast">All cores</span></td></tr>
+            <tr><td><code>black_pass-thred</code></td><td>Brute force using threads</td><td><span class="chip chip-slow">Single core</span></td></tr>
+            <tr><td><code>black_pass-thred-dict</code></td><td>Threaded + wordlist first</td><td><span class="chip chip-slow">Single core</span></td></tr>
+            <tr><td><code>black_pass-thred-print</code></td><td>Threaded + prints every guess</td><td><span class="chip chip-slow">Single core</span></td></tr>
+            <tr><td><code>black_pass-thred-dict-print</code></td><td>Threaded + wordlist + printing</td><td><span class="chip chip-slow">Single core</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="performance">
+      <div class="section-head">
+        <span class="label">Performance</span>
+        <h2>Multiprocessing vs. threads</h2>
+      </div>
+      <p class="lead">The default distributes work across every CPU core. The <code>thred</code>
+      commands use threads instead — but Python's Global Interpreter Lock (GIL) permits only one
+      thread to execute at a time, so they effectively share a single core.</p>
+
+      <div class="bench">
+        <div class="bench-row">
+          <div class="bench-label">Multiprocessing<span>all cores</span></div>
+          <div class="bench-track"><div class="bench-fill fast" style="width:41%"><span>0.16s</span></div></div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-label">Threads<span>single core</span></div>
+          <div class="bench-track"><div class="bench-fill slow" style="width:100%"><span>0.39s</span></div></div>
+        </div>
+        <p class="bench-caption">Measured on the same search · lower is better</p>
+      </div>
+
+      <p class="callout">In thread mode the reported guess count also rises sharply — threads keep
+      working while the “found it” signal propagates. The result is correct, but slower. For speed,
+      use <code>black_pass</code>.</p>
+    </section>
+
+    <section class="section alt" id="download">
+      <div class="section-head">
+        <span class="label">Download</span>
+        <h2>Get the files</h2>
+      </div>
+      <p class="lead">Place both files in the same folder, then run the script with Python 3.</p>
+      <div class="downloads">
+        <a class="download" href="index.py" download="index.py">
+          <div class="dl-top"><span class="dl-name">index.py</span><span class="dl-ext">PY</span></div>
+          <span class="dl-desc">The program</span>
+          <span class="dl-foot">~14 KB<span class="dl-go">Download →</span></span>
+        </a>
+        <a class="download" href="phpbb.txt" download="phpbb.txt">
+          <div class="dl-top"><span class="dl-name">phpbb.txt</span><span class="dl-ext">TXT</span></div>
+          <span class="dl-desc">The wordlist</span>
+          <span class="dl-foot">1.5 MB<span class="dl-go">Download →</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="usage">
+      <div class="section-head">
+        <span class="label">Usage</span>
+        <h2>Running it manually</h2>
+      </div>
+      <pre class="code-block"><code>python3 index.py                   <span class="c"># brute force (all cores)</span>
+python3 index.py print             <span class="c"># print every guess</span>
+python3 index.py dict              <span class="c"># wordlist first</span>
+python3 index.py dict print        <span class="c"># wordlist + print</span>
+python3 index.py thread            <span class="c"># threads instead of cores</span>
+python3 index.py thread dict print <span class="c"># flags combine in any order</span></code></pre>
+      <p class="callout">Requires Python 3. Both files must be located in the same directory.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="brand"><span class="brand-mark">bp</span><span class="brand-name">Black&nbsp;Pass</span></span>
+      <span class="footer-meta">A learning project · <span id="year"></span></span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
